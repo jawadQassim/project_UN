@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js CDN -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #343a40;
+            padding: 0.5rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            margin: 0 1rem;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #007bff;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #007bff;
+        }
+
+        .profession {
+            background: #fff;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .profession h3 {
+            color: #343a40;
+            margin-bottom: 1rem;
+        }
+
+        .profession p {
+            margin: 0.5rem 0;
+        }
+
+        .button {
+            display: inline-block;
+            margin: 0.5rem 0.5rem 0 0;
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        footer {
+            background-color: #0080ff;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Professions List</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="{% url 'profession_list' %}">Home</a></li>
+            <li><a href="{% url 'general_statistics' %}">General Statistics</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h2>Profession Details</h2>
+
+        {% for profession in professions %}
+        <div class="profession">
+            <h3>{{ profession.title }}</h3>
+            <p><strong>Salary Range:</strong> ${{ profession.salary_from }} - ${{ profession.salary_to }}</p>
+            <p><strong>City:</strong> {{ profession.city }}</p>
+            <p><strong>Key Skills:</strong> {{ profession.key_skills }}</p>
+            <p><strong>Description:</strong> {{ profession.description }}</p>
+            <p><strong>Date Posted:</strong> {{ profession.date_posted }}</p>
+
+            <!-- Add Chart for Salary Distribution -->
+            <canvas id="salaryChart-{{ profession.id }}" width="400" height="200"></canvas>
+            <script>
+                var ctx = document.getElementById('salaryChart-{{ profession.id }}').getContext('2d');
+                var salaryChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Min Salary', 'Max Salary'],
+                        datasets: [{
+                            label: 'Salary Distribution',
+                            data: [{{ profession.salary_from }}, {{ profession.salary_to }}],
+                            backgroundColor: ['rgba(0, 123, 255, 0.2)', 'rgba(0, 123, 255, 0.4)'],
+                            borderColor: ['rgba(0, 123, 255, 1)', 'rgba(0, 123, 255, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+
+            <!-- Clickable Links as Buttons -->
+            <a href="{% url 'deed_to_deed' profession.id %}" class="button">Deed-to-Deed Details</a>
+            <a href="{% url 'geography' profession.id %}" class="button">View Geography</a>
+            <a href="{% url 'skills_view' profession.id %}" class="button">View Skills</a>
+            <a href="{% url 'last_vacancies' profession.id %}" class="button">Last Vacancies</a>
+        </div>
+        {% endfor %}
+    </main>
+
+    <footer>
+        <p>Аль-нахари Джавад кассем РИ-230945</p>
+    </footer>
+</body>
+</html>

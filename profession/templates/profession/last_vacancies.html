@@ -1,0 +1,89 @@
+{% block content %}
+  <div class="container my-4">
+    <!-- Page Title -->
+    <h1 class="text-center text-primary mb-4">Last 24 Hours Vacancies</h1>
+
+    <!-- Back Button -->
+    <a href="{% url 'profession_list' %}" class="btn btn-dark mb-3">Back to Profession List</a>
+
+    <!-- Vacancies Table -->
+    <table class="table table-hover table-bordered shadow-sm">
+      <thead class="table-dark">
+        <tr>
+          <th>Vacancy Name</th>
+          <th>Description</th>
+          <th>Skills</th>
+          <th>Company</th>
+          <th>Salary</th>
+          <th>Region</th>
+          <th>Date Published</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for vacancy in vacancies %}
+          <tr>
+            <td>{{ vacancy.name }}</td>
+            <td>{{ vacancy.description }}</td>
+            <td>{{ vacancy.skills|join:", " }}</td>
+            <td>{{ vacancy.company.name }}</td>
+            <td>{{ vacancy.salary.from }} - {{ vacancy.salary.to }}</td>
+            <td>{{ vacancy.region.name }}</td>
+            <td>{{ vacancy.date_published }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-danger">No vacancies found in the last 24 hours.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+
+<!-- Modern CSS -->
+<style>
+  body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+  }
+
+  h1 {
+    font-weight: bold;
+    background: blue;
+  }
+
+  .btn-dark {
+    background-color: #343a40;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+  .btn-dark:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  table {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  table thead th {
+    text-align: center;
+    background-color: #0080ff;
+    color: white;
+  }
+
+  table tbody td {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .no-data {
+    font-weight: bold;
+    color: #dc3545;
+    text-align: center;
+  }
+</style>
